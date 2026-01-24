@@ -33,5 +33,5 @@ if st.button("predict"):
     "Last_Interaction" : Last_Interaction
  
     }
-    res=requests.post("http://localhost:8501/predict",json=payload)
+    res=requests.post("http://localhost:8000/predict",json=payload)
     st.json(res.json())

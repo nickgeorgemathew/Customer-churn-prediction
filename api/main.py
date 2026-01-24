@@ -9,5 +9,14 @@ app= FastAPI(title="Customer churn prediction")
 
 @app.post('/predict')
 def get_prediction(customer_data:CustomerInput):
-    return(220102)
-    
+    # x=predict_churn(customer_data)
+    # if not x:
+        return({
+  "tenure": 3,
+  "monthly_charges": 95.5,
+  "total_charges": 280.0,
+  "contract_type": "Month-to-month",
+  "payment_method": "Electronic check"
+})
+    # else:
+    #     return(x)

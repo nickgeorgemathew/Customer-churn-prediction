@@ -10,3 +10,5 @@ COPY /log /log
 COPY /api /api
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+EXPOSE 8000
