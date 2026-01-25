@@ -1,0 +1,1 @@
+{"model_version": "v1", "trained_on": "customer_churn_dataset", "metric": "ROC-AUC and f1", "score": 0.99, "trained_at": "2026-01-25T19:21:00.181142"}
