@@ -9,14 +9,14 @@ st.title("Customer Churn Prediction Demo")
 
 Age=st.number_input("Age",18,70,key="Age")             
 Gender=st.selectbox("Gender",["Male","female"])          
-Tenure =st.number_input("Tenure",key="tenure")       
-Usage_Frequency=st.number_input("Age",18,70,key="Usage_frequency")    
-Support_Calls=st.number_input("Age",18,70,key="Support_Calls")  
-Payment_Delay=st.number_input("Age",18,70,key="Payment_Delay")   
+Tenure =st.number_input("Tenure",1,60,key="tenure")       
+Usage_Frequency=st.number_input("Usage_Frequency",1,30,key="Usage_frequency")    
+Support_Calls=st.number_input("Support_Calls",0,10,key="Support_Calls")  
+Payment_Delay=st.number_input("Payment_Delay",0,30,key="Payment_Delay")   
 Subscription_Type =st.selectbox("Subscription type",["basic","premium","standard"])  
 Contract_Length=st.selectbox("contract length",["Monthly","quarterly","Annual"])  
-Total_Spend=st.number_input("Total spend",18,70,key="Total_Spend")  
-Last_Interaction=st.number_input("last interaction",18,70,key="Last_Interaction")  
+Total_Spend=st.number_input("Total spend",100,1000,key="Total_Spend")  
+Last_Interaction=st.number_input("last interaction",1,30,key="Last_Interaction")  
 
 
 if st.button("predict"):
@@ -34,4 +34,10 @@ if st.button("predict"):
  
     }
     res=requests.post("http://localhost:8000/predict",json=payload)
-    st.json(res.json())
+    st.write("Status code:", res.status_code)
+    try:
+        st.json(res.json())
+    except Exception as e:
+        st.write("Response is not JSON:")
+        st.text(res.text)
+       
