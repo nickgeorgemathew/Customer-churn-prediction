@@ -11,15 +11,16 @@ app= FastAPI(title="Customer churn prediction")
 def root():
     return {"message":"Welcome to Customer Churn Prediction API"}
 @app.post('/predict')
-def get_prediction(customer_data:CustomerInput):
-    x=predict_churn(customer_data)
-    if not x:
-        return({
-  "tenure": 3,
-  "monthly_charges": 95.5,
-  "total_charges": 280.0,
-  "contract_type": "Month-to-month",
-  "payment_method": "Electronic check"
-})
-    else:
-        return(x)
+def get_prediction(customer_data: CustomerInput):
+    try:
+        proba = predict_churn(customer_data)
+        return {
+            "churn_probability": {
+                "will churn": float(proba[1]),
+                "will not churn": float(proba[0])
+            }
+        }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {"error": str(e)}
