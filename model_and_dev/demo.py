@@ -18,9 +18,10 @@ Contract_Length=st.selectbox("contract length",["Monthly","quarterly","Annual"])
 Total_Spend=st.number_input("Total spend",100,1000,key="Total_Spend")  
 Last_Interaction=st.number_input("last interaction",1,30,key="Last_Interaction")  
 
-
-if st.button("predict"):
-    payload={       
+with st.spinner(text="predicting churn.......",width="content"):
+    if st.button("predict"):
+    
+        payload={       
     "Age": Age,              
     "Gender": Gender,         
     "Tenure": Tenure,
@@ -33,11 +34,11 @@ if st.button("predict"):
     "Last_Interaction" : Last_Interaction
  
     }
-    res=requests.post("http://localhost:8000/predict",json=payload)
-    st.write("Status code:", res.status_code)
-    try:
-        st.json(res.json())
-    except Exception as e:
-        st.write("Response is not JSON:")
-        st.text(res.text)
+        res=requests.post("http://localhost:8000/predict",json=payload)
+        st.write("Status code:", res.status_code)
+        try:
+            st.json(res.json())
+        except Exception as e:
+            st.write("Response is not JSON:")
+            st.text(res.text)
        
