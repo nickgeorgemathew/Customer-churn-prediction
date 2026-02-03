@@ -31,5 +31,6 @@ def predict_churn(data):
     transformed=transform_payload(data)
     data_df=pd.DataFrame([transformed])
     predict=model.predict_proba(data_df)[0]
-    return(predict)
+    prob=int(predict[1]>=0.5)
+    return(predict,prob)
 
