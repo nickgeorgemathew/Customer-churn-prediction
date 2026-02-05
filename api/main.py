@@ -18,6 +18,7 @@ def root():
 def get_prediction(customer_data: CustomerInput):
     start_time=time.perf_counter()
     db=SessionLocal()
+    
     try:
         proba,pred = predict_churn(customer_data)
         latency=(time.perf_counter()-start_time)*1000
@@ -51,4 +52,7 @@ def get_prediction(customer_data: CustomerInput):
             latency_ms=latency
 
         )
+        db.add(log)
+        db.commit()
+        
         return {"error": str(e)}
