@@ -10,7 +10,7 @@ DATABASE_URL="sqlite:///./logs.db"
 engine=create_engine(
     f"sqlite:///{DB_PATH}",connect_args={"check_same_thread":False}
 )
-session_local=sessionmaker(bind=engine)
+Sessionlocal=sessionmaker(bind=engine)
 Base=declarative_base()
 
 print("FASTAPI DB PATH:", engine.url)
