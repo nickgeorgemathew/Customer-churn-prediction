@@ -1,10 +1,10 @@
 from fastapi import FastAPI
-from schemas import CustomerInput
-from predict import predict_churn
+from api.schemas import CustomerInput
+from api.predict import predict_churn
 import pandas as pd
 import csv
 from logs.models import Predictionlog
-from logs.db import SessionLocal
+from logs.db import Sessionlocal
 import time
 from datetime import datetime,timezone
 
@@ -17,7 +17,7 @@ def root():
 @app.post('/predict')
 def get_prediction(customer_data: CustomerInput):
     start_time=time.perf_counter()
-    db=SessionLocal()
+    db=Sessionlocal()
     
     try:
         proba,pred = predict_churn(customer_data)
@@ -26,8 +26,8 @@ def get_prediction(customer_data: CustomerInput):
             model_version="v1.0",
             timestamp=datetime.now(timezone.utc),
             input_features=customer_data.model_dump(),
-            prediction=int(pred),
-            probability=float(proba),
+            prediction=pred,
+            probability=proba,
             latency_ms=latency
 
         )
