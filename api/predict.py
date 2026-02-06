@@ -3,7 +3,7 @@ import joblib
 import pandas as pd
 
 
-BASE_DIR = os.path.dirname(os.getcwd()) 
+BASE_DIR = os.getcwd() 
 MODEL_DIR = os.path.join(BASE_DIR, "model_and_dev")
 model_path = os.path.join(MODEL_DIR, "model_v1.pkl")
 preprocessor_path=os.path.join(MODEL_DIR, "preprocessor.pkl")
