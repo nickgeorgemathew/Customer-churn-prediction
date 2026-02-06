@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from pathlib import Path
 from sqlalchemy import create_engine,inspect
 from db import engine
-
+import numpy as np
 # Resolve path to logs.db in the same directory as dashboard.py
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "logs.db"
@@ -20,7 +20,8 @@ df = pd.read_sql("SELECT * FROM predictionlogs", engine)
 if df["timestamp"].dtype == "object":
     df["timestamp"] = pd.to_datetime(df["timestamp"])  # Convert to datetime if needed
 
-
+df["probability"] = pd.to_numeric(df["probability"], errors="coerce")
+df['prediction'] = pd.to_numeric(df['prediction'], errors='coerce')
 
 
 st.title(" Customer Churn Model Monitoring")
@@ -45,6 +46,51 @@ col4.metric("Error Rate (%)", f"{error_rate:.2f}")
 st.divider()
 
 
+st.subheader("📉 Model Drift Detection")
+
+baseline = df[df["timestamp"] < df["timestamp"].quantile(0.5)]
+recent = df[df["timestamp"] >= df["timestamp"].quantile(0.5)]
+
+
+
+def calculate_psi(expected, actual, bins=10):
+    expected = np.array(expected)
+    actual = np.array(actual)
+
+    breakpoints = np.linspace(0, 1, bins + 1)
+    expected_counts, _ = np.histogram(expected, breakpoints)
+    actual_counts, _ = np.histogram(actual, breakpoints)
+
+    expected_perc = expected_counts / len(expected)
+    actual_perc = actual_counts / len(actual)
+
+    psi = np.sum(
+        (actual_perc - expected_perc) *
+        np.log((actual_perc + 1e-6) / (expected_perc + 1e-6))
+    )
+    return psi
+
+
+
+
+
+
+if len(baseline) > 50 and len(recent) > 50:
+    psi = calculate_psi(
+        baseline["probability"],
+        recent["probability"]
+    )
+
+    st.metric("Prediction Drift (PSI)", f"{psi:.3f}")
+
+    if psi < 0.1:
+        st.success("No significant drift detected")
+    elif psi < 0.25:
+        st.warning("Moderate drift detected")
+    else:
+        st.error("High drift detected — model retraining recommended")
+else:
+    st.info("Not enough data for drift calculation yet")
 
 st.subheader("📈 Prediction Distribution")
 
